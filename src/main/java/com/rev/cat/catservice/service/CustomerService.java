@@ -37,7 +37,7 @@ public class CustomerService extends GenericService<Customer, CustomerRequestDTO
 
     @Override
     public Customer insert(CustomerRequestDTO dto) {
-        Customer customer = buildCreateEmployee(dto);
+        Customer customer = buildCreateCustomer(dto);
 
         customerRepository.insert(customer);
 
@@ -48,26 +48,26 @@ public class CustomerService extends GenericService<Customer, CustomerRequestDTO
     public Customer update(String id, CustomerRequestDTO dto) {
         Customer customer = findById(id);
 
-        buildUpdateEmployee(customer, dto);
+        buildUpdateCustomer(customer, dto);
         customerRepository.save(customer);
 
         return customer;
     }
 
-    private Customer buildCreateEmployee(CustomerRequestDTO dto) {
+    private Customer buildCreateCustomer(CustomerRequestDTO dto) {
         Customer customer = new Customer();
 
-        setEmployeeInformation(dto, customer);
+        setCustomerInformation(dto, customer);
 
         return customer;
     }
 
-    private void buildUpdateEmployee(Customer customer, CustomerRequestDTO dto) {
+    private void buildUpdateCustomer(Customer customer, CustomerRequestDTO dto) {
 
-        setEmployeeInformation(dto, customer);
+        setCustomerInformation(dto, customer);
     }
 
-    private static void setEmployeeInformation(CustomerRequestDTO dto, Customer employee) {
+    private static void setCustomerInformation(CustomerRequestDTO dto, Customer employee) {
         employee.setCI(dto.getCI());
         employee.setFirstName(dto.getFirstName());
         employee.setLastName(dto.getLastName());

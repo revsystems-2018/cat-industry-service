@@ -35,7 +35,7 @@ public class BrandService extends GenericService<Brand, BrandRequestDTO> {
 
     @Override
     public Brand insert(BrandRequestDTO dto) {
-        Brand brand = buildCreateDepartment(dto);
+        Brand brand = buildCreateBrand(dto);
         brand = brandRepository.insert(brand);
         return brand;
     }
@@ -43,23 +43,23 @@ public class BrandService extends GenericService<Brand, BrandRequestDTO> {
     @Override
     public Brand update(String id, BrandRequestDTO dto) {
         Brand brand = findById(id);
-        buildUpdateDepartment(brand, dto);
+        buildUpdateBrand(brand, dto);
         brand = brandRepository.save(brand);
         return brand;
     }
 
-    private Brand buildCreateDepartment(BrandRequestDTO dto) {
-        Brand department = new Brand();
-        setDepartmentInformation(dto, department);
+    private Brand buildCreateBrand(BrandRequestDTO dto) {
+        Brand brand = new Brand();
+        setBrandInformation(dto, brand);
 
-        return department;
+        return brand;
     }
 
-    private void buildUpdateDepartment(Brand brand, BrandRequestDTO dto) {
-        setDepartmentInformation(dto, brand);
+    private void buildUpdateBrand(Brand brand, BrandRequestDTO dto) {
+        setBrandInformation(dto, brand);
     }
 
-    private void setDepartmentInformation(BrandRequestDTO dto, Brand brand) {
+    private void setBrandInformation(BrandRequestDTO dto, Brand brand) {
         brand.setName(dto.getName());
         brand.setCode(dto.getCode());
         brand.setDescription(dto.getDescription());

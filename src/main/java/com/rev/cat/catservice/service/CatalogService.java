@@ -35,7 +35,7 @@ public class CatalogService extends GenericService<Catalog, CatalogRequestDTO> {
 
     @Override
     public Catalog insert(CatalogRequestDTO dto) {
-        Catalog catalog = buildCreateRules(dto);
+        Catalog catalog = buildCreateCatalog(dto);
         catalog = ruleRepository.insert(catalog);
 
         return catalog;
@@ -43,14 +43,14 @@ public class CatalogService extends GenericService<Catalog, CatalogRequestDTO> {
 
     @Override
     public Catalog update(String id, CatalogRequestDTO dto) {
-        Catalog rule = findById(id);
-        buildUpdateRules(rule, dto);
-        ruleRepository.save(rule);
+        Catalog catalog = findById(id);
+        buildUpdateCatalog(catalog, dto);
+        ruleRepository.save(catalog);
 
-        return rule;
+        return catalog;
     }
 
-    private Catalog buildCreateRules(CatalogRequestDTO dto) {
+    private Catalog buildCreateCatalog(CatalogRequestDTO dto) {
         Catalog catalog = new Catalog();
         catalog.setName(dto.getName());
         catalog.setDescription(dto.getDescription());
@@ -58,7 +58,7 @@ public class CatalogService extends GenericService<Catalog, CatalogRequestDTO> {
         return catalog;
     }
 
-    private void buildUpdateRules(Catalog catalog, CatalogRequestDTO dto) {
+    private void buildUpdateCatalog(Catalog catalog, CatalogRequestDTO dto) {
         catalog.setName(dto.getName());
         catalog.setDescription(dto.getDescription());
     }
