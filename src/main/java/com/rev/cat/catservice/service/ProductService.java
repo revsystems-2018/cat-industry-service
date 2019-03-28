@@ -1,5 +1,6 @@
 package com.rev.cat.catservice.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rev.cat.catservice.domain.Product;
 import com.rev.cat.catservice.dto.ProductRequestDTO;
 import com.rev.cat.catservice.repository.BrandRepository;
@@ -7,6 +8,7 @@ import com.rev.cat.catservice.repository.CatalogRepository;
 import com.rev.cat.catservice.repository.ProductRepository;
 import com.rev.cat.catservice.service.bootstrap.GenericService;
 import com.rev.cat.catservice.service.utils.ImageUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,12 +84,25 @@ public class ProductService extends GenericService<Product, ProductRequestDTO> {
         setProductInformation(product, dto);
     }
 
-    private void setProductInformation(Product product, ProductRequestDTO dto){
+    private void setProductInformation(Product product, ProductRequestDTO dto) {
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setCatalog(catalogRepository.findByName(dto.getCatalogName()));
         product.setBrand(brandRepository.findByName(dto.getBrandName()));
         product.setStock(dto.getStock());
         product.setPrice(dto.getPrice());
+    }
+
+    @JsonIgnore
+    private String setImageBase64(Product product) {
+        String imageStr = "";
+        if (product.getImage() != null) {
+            byte[] bytes = new byte[product.getImage().get(0).length];
+            for (int i = 0; i < product.getImage().get(0).length; i++) {
+                bytes[i] = product.getImage().get(0)[i];
+            }
+            imageStr = Base64.encodeBase64String(bytes);
+        }
+        return imageStr;
     }
 }

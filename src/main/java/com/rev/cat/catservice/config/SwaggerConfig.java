@@ -17,7 +17,7 @@ public class SwaggerConfig {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.lego.care4you"))
+                .apis(RequestHandlerSelectors.basePackage("com.rev.cat.catservice"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
@@ -26,8 +26,8 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("Industry Security System API",
-                "Care 4 You, Security System API",
+        return new ApiInfo("CAT Industry System API",
+                "CAT Service, Security System API",
                 "1.0",
                 "urn:tos",
                 ApiInfo.DEFAULT_CONTACT,
