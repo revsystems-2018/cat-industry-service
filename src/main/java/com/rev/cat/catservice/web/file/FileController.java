@@ -1,8 +1,9 @@
 package com.rev.cat.catservice.web.file;
 
-import com.rev.cat.catservice.domain.file.model.DBFile;
-import com.rev.cat.catservice.domain.file.payload.UploadFileResponse;
+import com.rev.cat.catservice.domain.file.model.File;
+import com.rev.cat.catservice.domain.file.payload.FileRequestDTO;
 import com.rev.cat.catservice.service.file.DBFileStorageService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,42 +24,41 @@ import java.util.stream.Collectors;
  * @author rveizaga
  */
 @RestController
+@RequestMapping("/files")
+@Api(value = "files", description = "Operations related to files")
 public class FileController {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+    private DBFileStorageService fileService;
 
-    @Autowired
-    private DBFileStorageService dbFileStorageService;
-
-    @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        DBFile dbFile = dbFileStorageService.storeFile(file);
-
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
-                .path(dbFile.getId())
-                .toUriString();
-
-        return new UploadFileResponse(dbFile.getFileName(), fileDownloadUri,
-                file.getContentType(), file.getSize());
+    public FileController(DBFileStorageService fileService) {
+        this.fileService = fileService;
     }
 
-    @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
-                .collect(Collectors.toList());
+    @RequestMapping(method = RequestMethod.GET)
+    public List<File> findAll() {
+        return fileService.findAll();
     }
 
-    @GetMapping("/downloadFile/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) {
-        // Load file from database
-        DBFile dbFile = dbFileStorageService.getFile(fileId);
+    @RequestMapping(
+            value = "/{id}",
+            method = RequestMethod.GET)
+    public File findById(@PathVariable String id) {
+        return fileService.findById(id);
+    }
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(dbFile.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFileName() + "\"")
-                .body(new ByteArrayResource(dbFile.getData()));
+    @RequestMapping(
+            value = "/{referenceId}",
+            method = RequestMethod.POST
+    )
+    public File upload(@RequestParam("file") MultipartFile multipart, @PathVariable String referenceId) {
+        FileRequestDTO dto = new FileRequestDTO(referenceId);
+        return fileService.upload(multipart, dto);
+    }
+
+    @RequestMapping(
+            value = "/{id}",
+            method = RequestMethod.DELETE)
+    public File delete(@PathVariable String id) {
+        return fileService.delete(id);
     }
 }

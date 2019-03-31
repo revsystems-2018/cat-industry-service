@@ -1,46 +1,78 @@
 package com.rev.cat.catservice.service.file;
 
-import com.rev.cat.catservice.domain.file.model.DBFile;
+import com.rev.cat.catservice.domain.file.model.File;
+import com.rev.cat.catservice.domain.file.payload.FileRequestDTO;
 import com.rev.cat.catservice.exception.FileStorageException;
 import com.rev.cat.catservice.exception.MyFileNotFoundException;
 import com.rev.cat.catservice.repository.file.DBFileRepository;
+import com.rev.cat.catservice.service.bootstrap.GenericService;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author rveizaga
  */
 
 @Service
-public class DBFileStorageService {
+public class DBFileStorageService extends GenericService<File, FileRequestDTO> {
 
-    @Autowired
     private DBFileRepository dbFileRepository;
 
-    public DBFile storeFile(MultipartFile file) {
-        // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
-        try {
-            // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
-            }
-
-            DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes());
-
-            return dbFileRepository.save(dbFile);
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-        }
+    public DBFileStorageService(DBFileRepository fileRepository) {
+        this.dbFileRepository = fileRepository;
     }
 
-    public DBFile getFile(String fileId) {
-        return dbFileRepository.findById(fileId)
-                .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + fileId));
+    @Override
+    public List<File> findAll() {
+        return null;
+    }
+
+    @Override
+    public File findById(String id) {
+        return null;
+    }
+
+    @Override
+    public File delete(String id) {
+        return null;
+    }
+
+    @Override
+    public File insert(FileRequestDTO dto) {
+        return null;
+    }
+
+    @Override
+    public File update(String id, FileRequestDTO dto) {
+        return null;
+    }
+
+    public File upload(MultipartFile multipart, FileRequestDTO dto) {
+        File file = buildCreateFile(dto, multipart);
+        file = dbFileRepository.insert(file);
+        return file;
+    }
+
+    private File buildCreateFile(FileRequestDTO dto, MultipartFile multipart) {
+        File file = new File();
+        setFileInformation(dto, file, multipart);
+
+        return file;
+    }
+
+    private void setFileInformation(FileRequestDTO dto, File file, MultipartFile multipart) {
+        try {
+            file.setReferenceId(dto.getReferenceId());
+            file.setFile(new Binary(BsonBinarySubType.BINARY, multipart.getBytes()));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }
