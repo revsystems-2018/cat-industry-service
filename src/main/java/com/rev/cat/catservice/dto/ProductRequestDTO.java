@@ -4,8 +4,8 @@ public class ProductRequestDTO {
 
     private String name;
     private String description;
-    private String catalogName;
-    private String brandName;
+    private String catalogId;
+    private String brandId;
     private Integer stock;
     private double price;
 
@@ -25,20 +25,20 @@ public class ProductRequestDTO {
         this.description = description;
     }
 
-    public String getCatalogName() {
-        return catalogName;
+    public String getCatalogId() {
+        return catalogId;
     }
 
-    public void setCatalogName(String catalogName) {
-        this.catalogName = catalogName;
+    public void setCatalogId(String catalogId) {
+        this.catalogId = catalogId;
     }
 
-    public String getBrandName() {
-        return brandName;
+    public String getBrandId() {
+        return brandId;
     }
 
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
+    public void setBrandName(String brandId) {
+        this.brandId = brandId;
     }
 
     public Integer getStock() {

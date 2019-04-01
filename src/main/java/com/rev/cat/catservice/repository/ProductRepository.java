@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface ProductRepository extends GenericRepository<Product> {
 
-    List<Product> findSafetyEquipmentsByCreatedDateOrderByCreatedDateDesc(Date createdDate);
+    List<Product> findByNameOrderByPriceDesc(String name);
+
+    List<Product> findByCatalog_Id(String id);
 }
