@@ -1,26 +1,43 @@
 package com.rev.cat.catservice.service.mail;
 
+import com.rev.cat.catservice.service.mail.model.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.util.Date;
+
+@Component
 public class MailService {
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private JavaMailSender mailSender;
 
-    public void sendMail(String from, String to, String subject, String body) {
+    public void send(Email email) throws MailException, MessagingException {
 
-        SimpleMailMessage mail = new SimpleMailMessage();
+        validateMessage(email);
 
-        mail.setFrom(from);
-        mail.setTo(to);
-        mail.setSubject(subject);
-        mail.setText(body);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
 
-        javaMailSender.send(mail);
+        messageHelper.setTo(email.getTo().toArray(new String[email.getTo().size()]));
+        messageHelper.setFrom(email.getFrom());
+        messageHelper.setSubject(email.getSubject());
+        messageHelper.setSentDate(new Date());
+        messageHelper.setText(email.getBody(), true);
+
+        mailSender.send(messageHelper.getMimeMessage());
     }
 
+    private void validateMessage(Email email) {
+        if (null == email.getTo() || null == email.getFrom() || null == email.getSubject() || null == email.getBody()) {
+            throw new IllegalArgumentException("to, from, subject and text cannot be null");
+        }
+    }
 }

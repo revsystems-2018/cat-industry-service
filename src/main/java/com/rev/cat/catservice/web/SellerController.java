@@ -4,6 +4,7 @@ import com.rev.cat.catservice.domain.Seller;
 import com.rev.cat.catservice.dto.SellerRequestDTO;
 import com.rev.cat.catservice.service.SellerService;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @Api(value = "sellers", description = "Operations related to sellers")
 public class SellerController {
 
+    @Autowired
     private SellerService sellerService;
 
     @RequestMapping(method = RequestMethod.GET)

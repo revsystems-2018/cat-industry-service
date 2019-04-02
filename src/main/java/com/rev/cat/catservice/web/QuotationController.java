@@ -3,6 +3,7 @@ package com.rev.cat.catservice.web;
 import com.rev.cat.catservice.domain.Quotation;
 import com.rev.cat.catservice.dto.QuotationRequestDTO;
 import com.rev.cat.catservice.service.QuotationService;
+import com.rev.cat.catservice.service.SenderEmailService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ public class QuotationController {
 
     @Autowired
     private QuotationService quotationService;
+
+    @Autowired
+    private SenderEmailService senderEmailService;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Quotation> findAll() {
@@ -31,7 +35,9 @@ public class QuotationController {
 
     @RequestMapping(method = RequestMethod.POST)
     public Quotation insert(@RequestBody QuotationRequestDTO dto) {
-        return quotationService.insert(dto);
+        Quotation quotation = quotationService.insert(dto);
+        senderEmailService.sendEmail(quotation);
+        return quotation;
     }
 
     @RequestMapping(
