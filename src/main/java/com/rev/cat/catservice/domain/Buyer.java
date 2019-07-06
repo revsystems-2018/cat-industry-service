@@ -6,6 +6,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+/*
+* @autor rveizaga
+*/
+
 @Document
 public class Buyer extends GenericDomain {
 
