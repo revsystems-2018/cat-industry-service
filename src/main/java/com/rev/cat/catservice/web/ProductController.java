@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+* @autor rveizaga
+*/
+
 @RestController
 @RequestMapping("/products")
 @Api(value = "products", description = "Operations related to Products")
