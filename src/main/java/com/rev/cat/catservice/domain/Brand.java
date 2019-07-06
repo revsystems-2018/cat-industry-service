@@ -3,6 +3,10 @@ package com.rev.cat.catservice.domain;
 import com.rev.cat.catservice.domain.bootstrap.GenericDomain;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/*
+* @autor rveizaga
+*/
+
 @Document
 public class Brand extends GenericDomain {
 
