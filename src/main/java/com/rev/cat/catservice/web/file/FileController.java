@@ -33,7 +33,8 @@ public class FileController {
     public FileController(DBFileStorageService fileService) {
         this.fileService = fileService;
     }
-
+    
+    // TODO: Improve implementations with findAll
     @RequestMapping(method = RequestMethod.GET)
     public List<File> findAll() {
         return fileService.findAll();
