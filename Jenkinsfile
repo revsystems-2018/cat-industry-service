@@ -46,8 +46,9 @@ pipeline{
             }
         }
         stage("Run Automation tests"){
-            agent { label "master"}
-			agent{ docker 'maven:3-alpine' }
+			agent{
+                docker 'maven:3-alpine'
+            }
 			steps {
                 script {
                     try {
