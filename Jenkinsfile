@@ -43,7 +43,7 @@ pipeline{
         stage("Clone Automation Repository"){
             agent { label "master"}
             steps {
-               git 'https://github.com/revsystems-2018/auto-GA-v05.git' 
+               git 'https://github.com/revsystems-2018/cat-industry-service.git'
             }
         }
         stage("Run Automation tests"){
@@ -51,9 +51,9 @@ pipeline{
 			steps {
                 script {
                     try {
-                        sh './gradlew clean test --no-daemon'
+                        sh "mvn clean compile package"
                     } finally {
-                        junit '**/build/test-results/test/*.xml'
+                        sh "mvn -q clean package -Dmaven.test.skip=true"
                     }
                 }
             }
