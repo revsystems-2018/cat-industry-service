@@ -20,7 +20,6 @@ pipeline{
         stage("Package"){
             agent { label ' master' }
             steps{
-				sh "echo Local project ${pwd}"
                 sh "docker build -t cat-industry-service ."
                 sh "docker save -o cat-industry-service.tar cat-industry-service"
                 stash name: "stash-artifact", includes: "cat-industry-service.tar"
@@ -48,6 +47,7 @@ pipeline{
         }
         stage("Run Automation tests"){
             agent { label "master"}
+			agent{ docker 'maven:3-alpine' }
 			steps {
                 script {
                     try {
